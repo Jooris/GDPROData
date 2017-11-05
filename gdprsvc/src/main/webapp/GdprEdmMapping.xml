@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<JPAEDMMappingModel
+	xmlns="http://www.apache.org/olingo/odata2/jpa/processor/api/model/mapping">
+	<PersistenceUnit name="com.sap.espm.model">
+		<JPAEntityTypes>
+		
+			<JPAEntityType name="Record">
+				<EDMEntitySet>Records</EDMEntitySet>
+				<JPAAttributes>
+					<JPAAttribute name="recordId">recordId</JPAAttribute>
+					<JPAAttribute name="recordName">recordName</JPAAttribute>
+					<JPAAttribute name="process">process</JPAAttribute>
+					<JPAAttribute name="organisation">organisation</JPAAttribute>
+					<JPAAttribute name="pc">pc</JPAAttribute>
+					<JPAAttribute name="country">country</JPAAttribute>
+					<JPAAttribute name="datacategory">datacategory</JPAAttribute>
+					<JPAAttribute name="legalbase">legalbase</JPAAttribute>
+					<JPAAttribute name="creationdate">creationdate</JPAAttribute>
+					<JPAAttribute name="submitdate">submitdate</JPAAttribute>
+					<JPAAttribute name="reviewdate">reviewdate</JPAAttribute>
+					<JPAAttribute name="obsoleteday">obsoleteday</JPAAttribute>
+					<JPAAttribute name="status">status</JPAAttribute>
+				</JPAAttributes>
+				<JPARelationships>
+					<JPARelationship name="texts">Texts</JPARelationship>
+					<JPARelationship name="responses">Responses</JPARelationship>
+				</JPARelationships>
+			</JPAEntityType>
+			
+			<JPAEntityType name="Question">
+				<EDMEntitySet>Questions</EDMEntitySet>
+				<JPAAttributes>
+					<JPAAttribute name="questionId">questionId</JPAAttribute>
+					<JPAAttribute name="validFrom">validFrom</JPAAttribute>
+					<JPAAttribute name="validTo">validTo</JPAAttribute>
+					<JPAAttribute name="multiple">multiple</JPAAttribute>
+				</JPAAttributes>
+				<JPARelationships>
+				
+					<JPARelationship name="fk_category">Category</JPARelationship>
+				
+					<JPARelationship name="texts">Texts</JPARelationship>
+					<JPARelationship name="answers">Answers</JPARelationship>
+				</JPARelationships>
+			</JPAEntityType>
+			<JPAEntityType name="Answer">
+				<EDMEntitySet>Answers</EDMEntitySet>
+				<JPAAttributes>
+					<JPAAttribute name="answerId">answerId</JPAAttribute>
+					<JPAAttribute name="validFrom">validFrom</JPAAttribute>
+					<JPAAttribute name="validTo">validTo</JPAAttribute>
+					<JPAAttribute name="freetext">freetext</JPAAttribute>
+				</JPAAttributes>
+				<JPARelationships>
+			
+					<JPARelationship name="fk_question">Question</JPARelationship>
+				
+					<JPARelationship name="texts">Texts</JPARelationship>
+					<JPARelationship name="responses">Responses</JPARelationship>
+					
+				</JPARelationships>
+			</JPAEntityType>
+			<JPAEntityType name="Category">
+				<EDMEntitySet>Categories</EDMEntitySet>
+				<JPAAttributes>
+					<JPAAttribute name="categoryId">categoryId</JPAAttribute>
+					<JPAAttribute name="categoryName">categoryName</JPAAttribute>
+				</JPAAttributes>
+				<JPARelationships>
+					<JPARelationship name="questions">Questions</JPARelationship>
+					<JPARelationship name="texts">Texts</JPARelationship>
+					<JPARelationship name="validQuestions">ValidQuestions</JPARelationship>
+					
+				</JPARelationships>
+			</JPAEntityType>
+			<JPAEntityType name="CategoryText">
+				<EDMEntitySet>CategoryTexts</EDMEntitySet>
+				<JPAAttributes>
+					<JPAAttribute name="category">category</JPAAttribute>
+					<JPAAttribute name="language">language</JPAAttribute>
+					<JPAAttribute name="categoryName">categoryName</JPAAttribute>
+				</JPAAttributes>
+				<JPARelationships>
+				</JPARelationships>
+			</JPAEntityType>
+			<JPAEntityType name="QuestionText">
+				<EDMEntitySet>QuestionTexts</EDMEntitySet>
+				<JPAAttributes>
+					<JPAAttribute name="question">question</JPAAttribute>
+					<JPAAttribute name="language">language</JPAAttribute>
+					<JPAAttribute name="questionText">questionText</JPAAttribute>
+				</JPAAttributes>
+				<JPARelationships>
+				</JPARelationships>
+			</JPAEntityType>
+			<JPAEntityType name="AnswerText">
+				<EDMEntitySet>AnswerTexts</EDMEntitySet>
+				<JPAAttributes>
+					<JPAAttribute name="answer">answer</JPAAttribute>
+					<JPAAttribute name="language">language</JPAAttribute>
+					<JPAAttribute name="answerText">answerText</JPAAttribute>
+				</JPAAttributes>
+				<JPARelationships>
+				</JPARelationships>
+			</JPAEntityType>
+			<JPAEntityType name="RecordText">
+				<EDMEntitySet>RecordTexts</EDMEntitySet>
+				<JPAAttributes>
+					<JPAAttribute name="record">record</JPAAttribute>
+					<JPAAttribute name="language">language</JPAAttribute>
+					<JPAAttribute name="processName">processName</JPAAttribute>
+				</JPAAttributes>
+				<JPARelationships>
+				</JPARelationships>
+			</JPAEntityType>
+			
+			<JPAEntityType name="Response">
+				<EDMEntitySet>Responses</EDMEntitySet>
+				<JPAAttributes>			
+					<JPAAttribute name="responseid">responseid</JPAAttribute>
+					<JPAAttribute name="text">text</JPAAttribute>
+				</JPAAttributes>
+				<JPARelationships>
+				
+					<JPARelationship name="fk_answer">Answer</JPARelationship>
+					<JPARelationship name="fk_record">Record</JPARelationship>
+				
+				</JPARelationships>
+			</JPAEntityType>
+			
+			
+		</JPAEntityTypes>
+		
+		
+		
+		
+		<JPAEmbeddableTypes>
+		</JPAEmbeddableTypes>
+	</PersistenceUnit>
+</JPAEDMMappingModel>

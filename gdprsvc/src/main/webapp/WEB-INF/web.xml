@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://java.sun.com/xml/ns/javaee"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0" metadata-complete="false">
+<!--  
+    <login-config>
+        <auth-method>FORM</auth-method>
+    </login-config>
+
+    <session-config>
+        <session-timeout>20</session-timeout>
+    </session-config>
+
+    <security-role>
+        <role-name>Everyone</role-name>
+    </security-role>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>All SAP Cloud Platform users</web-resource-name>
+            <url-pattern>/*</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>Everyone</role-name>
+        </auth-constraint>
+
+        <user-data-constraint>
+            <transport-guarantee>NONE</transport-guarantee>
+        </user-data-constraint>
+    </security-constraint>
+
+    
+    <filter>
+        <filter-name>RestCsrfPreventionFilter</filter-name>
+        <filter-class>org.apache.catalina.filters.RestCsrfPreventionFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>RestCsrfPreventionFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+-->
+	<filter>
+        <filter-name>SecureFilter</filter-name>
+        <filter-class>com.agfa.gdpr.odata.web.GdprServiceFactoryFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>SecureFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <servlet>
+		<servlet-name>ODataServlet</servlet-name>
+		<servlet-class>org.apache.cxf.jaxrs.servlet.CXFNonSpringJaxrsServlet</servlet-class>
+		<init-param>
+			<param-name>javax.ws.rs.Application</param-name>
+			<param-value>org.apache.olingo.odata2.core.rest.app.ODataApplication</param-value>
+		</init-param>
+		<init-param>
+			<param-name>org.apache.olingo.odata2.service.factory</param-name>
+			<param-value>com.agfa.gdpr.odata.web.GdprServiceFactory</param-value>
+		</init-param>
+		<load-on-startup>2</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>ODataServlet</servlet-name>
+		<url-pattern>/gdpr.svc/*</url-pattern>
+	</servlet-mapping>
+	<resource-ref>
+		<res-ref-name>jdbc/DefaultDB</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+	</resource-ref>
+	
+</web-app>
