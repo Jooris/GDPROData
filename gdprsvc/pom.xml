@@ -273,7 +273,7 @@
 		<local.server.http.port>8080</local.server.http.port>
 		<local.server.https.port>8443</local.server.https.port>
 		<local.server.ajp.port>8009</local.server.ajp.port>
-		<olingo.version>2.0.7</olingo.version>
+		<olingo.version>2.0.9</olingo.version>
 		<slf4j.version>1.7.12</slf4j.version>
 		<junit.version>4.12</junit.version>
 		<derby.version>10.9.1.0</derby.version>

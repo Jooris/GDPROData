@@ -3,8 +3,10 @@ package com.agfa.gdpr.db;
 import java.io.InputStream;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
@@ -18,12 +20,16 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
+import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
 import org.apache.olingo.odata2.jpa.processor.api.model.JPAEdmExtension;
 import org.apache.olingo.odata2.jpa.processor.api.model.JPAEdmSchemaView;
+import org.eclipse.persistence.annotations.Cache;
 import org.eclipse.persistence.annotations.JoinFetch;
+import org.eclipse.persistence.config.CacheIsolationType;
 
 import com.agfa.gdpr.db.rc.RCCategory;
 
@@ -32,11 +38,14 @@ import com.agfa.gdpr.db.rc.RCCategory;
 @Entity
 @Table(name = "GDPR_RECORD")
 @NamedQueries({
-	@NamedQuery(name = "Record.getAllRecords", query = "SELECT c FROM Record c")
+	@NamedQuery(name = "Record.getAllRecords", query = "SELECT c FROM Record c"),
+	@NamedQuery(name = "Record.getRecordById", query = "SELECT c FROM Record c where c.recordId = ?1")
 })
+@Cache(isolation=CacheIsolationType.ISOLATED)
 public class Record implements JPAEdmExtension {
 
 	public static final String QUERY_GETALLRECORDS = "Record.getAllRecords";
+	public static final String QUERY_GETRECORDBYID = "Record.getRecordById";
 	
 	public static final String STATUS_DRAFT = "DRAFT";
 	public static final String STATUS_SUBMITTED = "SUBMITTED";
@@ -90,7 +99,7 @@ public class Record implements JPAEdmExtension {
 	@OneToMany(mappedBy = "record", targetEntity = RecordText.class, fetch = FetchType.EAGER)
 	private List<RecordText> texts;
 	
-	@OneToMany(mappedBy = "fk_record", targetEntity = Response.class, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "fk_record", targetEntity = Response.class, fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	private List<Response> responses;
 	
 	
@@ -271,10 +280,33 @@ public class Record implements JPAEdmExtension {
 	}
 	 
 	
+	@PrePersist
+	void onCreate() {
+		this.setCreationdate(new Date(Calendar.getInstance().getTimeInMillis()));
+		this.setStatus(STATUS_DRAFT);
+	}
+	/*
+	@PreUpdate
+	private void preUpdate(Record entity) {
 	
-
+			if(this.getStatus()!=STATUS_SUBMITTED){
+				if(entity.getStatus()==STATUS_SUBMITTED){
+					this.setSubmitdate(new Date(Calendar.getInstance().getTimeInMillis()));
+				}
+			}
+			if(this.getStatus()!=STATUS_PUBLISHED){
+				if(entity.getStatus()==STATUS_PUBLISHED){
+					this.setReviewdate(new Date(Calendar.getInstance().getTimeInMillis()));
+				}
+			}
+			if(this.getStatus()!=STATUS_OBSOLETE){
+				if(entity.getStatus()==STATUS_OBSOLETE){
+					this.setObsoleteday(new Date(Calendar.getInstance().getTimeInMillis()));
+				}
+			}
 	
-	
+	}
+*/
 	
 
 }

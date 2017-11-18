@@ -19,11 +19,15 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.eclipse.persistence.annotations.Cache;
+import org.eclipse.persistence.config.CacheIsolationType;
+
 @Entity
 @Table(name = "GDPR_CATEGORY")
 @NamedQueries({
 	@NamedQuery(name = "Category.getAllCategories", query = "SELECT c FROM Category c")
 })
+@Cache(isolation=CacheIsolationType.ISOLATED)
 public class Category {
 
 	public static final String QUERY_GETALLCATEGORIES = "Category.getAllCategories";

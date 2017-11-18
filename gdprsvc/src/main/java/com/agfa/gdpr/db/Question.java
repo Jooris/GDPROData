@@ -23,12 +23,25 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.eclipse.persistence.annotations.Cache;
+import org.eclipse.persistence.config.CacheIsolationType;
+
 @Entity
 @Table(name = "GDPR_QUESTION")
 @NamedQueries({
-	@NamedQuery(name = "Question.getAllQuestions", query = "SELECT q FROM Question q")
+	@NamedQuery(name = "Question.getAllQuestions", query = "SELECT q FROM Question q"),
+	@NamedQuery(name = "Question.getQuestionById", query = "SELECT c FROM Question c where c.questionId = ?1")
 })
+@Cache(isolation=CacheIsolationType.ISOLATED)
 public class Question {
+
+	public int getSortIndex() {
+		return sortIndex;
+	}
+
+	public void setSortIndex(int sortIndex) {
+		this.sortIndex = sortIndex;
+	}
 
 	public String getCustAtt() {
 		return "Random Text"+getQuestionId();
@@ -39,6 +52,7 @@ public class Question {
 	}
 
 	public static final String QUERY_GETALLQUESTIONS = "Question.getAllQuestions";
+	public static final String QUERY_GETQUESTIONBYID = "Question.getQuestionById";
 	
 	/* Customer ids are generated within a number range starting with 1 */
 	@TableGenerator(name = "QuestionGenerator", table = "ESPM_ID_GENERATOR", pkColumnName = "GENERATOR_NAME", valueColumnName = "GENERATOR_VALUE", pkColumnValue = "QUESTION", initialValue = 100000000, allocationSize = 100)
@@ -55,6 +69,9 @@ public class Question {
 	
 	@Column(name = "MULTIPLE")
 	private boolean multiple;
+	
+	@Column(name = "SORTINDEX")
+	private int sortIndex;
 	
 	@ManyToOne(optional=false)
 	@JoinColumn(name="CATEGORY_ID", referencedColumnName="CATEGORY_ID")
@@ -125,6 +142,8 @@ public class Question {
 	public void setFk_category(Category fk_category) {
 		this.fk_category = fk_category;
 	}
+	
+	
 	
 	
 	

@@ -9,13 +9,16 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
+import org.eclipse.persistence.annotations.Cache;
+import org.eclipse.persistence.config.CacheIsolationType;
+
 @Entity
 @Table(name = "GDPR_RECORDTEXT")
 @NamedQueries({
 	@NamedQuery(name = "RecordText.getAllTexts", query = "SELECT c FROM RecordText c"),
 	
 })
-
+@Cache(isolation=CacheIsolationType.ISOLATED)
 //@NamedQuery(name = "CategoryText.getAllTextByLanguage", query = "SELECT c FROM CategoryText c where language = ?language"),
 public class RecordText {
 

@@ -20,8 +20,11 @@ import org.apache.olingo.odata2.api.exception.ODataApplicationException;
 import org.apache.olingo.odata2.api.exception.ODataException;
 
 import com.agfa.gdpr.db.Answer;
+import com.agfa.gdpr.db.AnswerText;
 import com.agfa.gdpr.db.Question;
+import com.agfa.gdpr.db.QuestionText;
 import com.agfa.gdpr.db.Record;
+import com.agfa.gdpr.db.Response;
 import com.agfa.gdpr.odata.web.Utility;
 
 
@@ -152,6 +155,137 @@ public class RecordsProcessor {
 				throw new ODataApplicationException("No Questions",
 						Locale.ENGLISH, HttpStatusCodes.BAD_REQUEST, e);
 			}
+		} finally {
+			em.close();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@EdmFunctionImport(name = "AddResponse", entitySet = "Responses", returnType = @ReturnType(type = Type.ENTITY, isCollection = false))
+	public Response AddResponse(
+			@EdmFunctionImportParameter(name = "recordID") String recordID,
+			@EdmFunctionImportParameter(name = "answerID") String answerID,
+			@EdmFunctionImportParameter(name = "text") String text
+			) throws ODataException {
+		EntityManagerFactory emf = Utility.getEntityManagerFactory();
+		EntityManager em = emf.createEntityManager();
+		
+		try {
+				Response response = new Response();
+				Answer answer = (Answer)em.createNamedQuery(Answer.QUERY_GETANSWERBYID).setParameter(1, answerID).getSingleResult();
+		    	Record record = (Record)em.createNamedQuery(Record.QUERY_GETRECORDBYID).setParameter(1, recordID).getSingleResult();
+		    	
+		    	response.setFk_answer(answer);
+		    	response.setFk_record(record);
+		    	response.setText(text);
+		    	
+		    	 em.getTransaction().begin();
+		    	    if (!em.contains(response)) {
+		    	        // persist object - add to entity manager
+		    	        em.persist(response);
+		    	        // flush em - save to DB
+		    	        em.flush();
+		    	    }
+		    	    // commit transaction at all
+		    	    em.getTransaction().commit();
+		    	    
+		    	return response;
+
+		} finally {
+			em.close();
+		}
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	@EdmFunctionImport(name = "setAnswerText", entitySet = "AnswerTexts", returnType = @ReturnType(type = Type.ENTITY, isCollection = false))
+	public AnswerText setAnswerText(
+			@EdmFunctionImportParameter(name = "language") String language,
+			@EdmFunctionImportParameter(name = "answerID") String answerID,
+			@EdmFunctionImportParameter(name = "text") String text
+			) throws ODataException {
+		EntityManagerFactory emf = Utility.getEntityManagerFactory();
+		EntityManager em = emf.createEntityManager();
+		
+		try {
+				AnswerText answerText;
+				Answer answer = (Answer)em.createNamedQuery(Answer.QUERY_GETANSWERBYID).setParameter(1, answerID).getSingleResult();
+		    	
+				answerText = (AnswerText)em.createNamedQuery(AnswerText.QUERY_GETTEXT).setParameter(1, answer).setParameter(2, language).getSingleResult();
+				
+				if(answerText!=null){
+					answerText.setAnswerText(text);
+				}
+				else{
+					answerText = new AnswerText();
+					
+					answerText.setAnswer(answer);
+					answerText.setAnswerText(text);
+					answerText.setLanguage(language);
+				}
+				
+		    	
+		    	
+		    	 em.getTransaction().begin();
+		    	    if (!em.contains(answerText)) {
+		    	        // persist object - add to entity manager
+		    	        em.persist(answerText);
+		    	        // flush em - save to DB
+		    	        em.flush();
+		    	    }
+		    	    // commit transaction at all
+		    	    em.getTransaction().commit();
+		    	    
+		    	return answerText;
+
+		} finally {
+			em.close();
+		}
+	}
+	
+	
+	
+	@SuppressWarnings("unchecked")
+	@EdmFunctionImport(name = "setQuestionText", entitySet = "QuestionTexts", returnType = @ReturnType(type = Type.ENTITY, isCollection = false))
+	public QuestionText setQuestionText(
+			@EdmFunctionImportParameter(name = "language") String language,
+			@EdmFunctionImportParameter(name = "questionID") String questionID,
+			@EdmFunctionImportParameter(name = "text") String text
+			) throws ODataException {
+		EntityManagerFactory emf = Utility.getEntityManagerFactory();
+		EntityManager em = emf.createEntityManager();
+		
+		try {
+				QuestionText questionText;
+				Question question = (Question)em.createNamedQuery(Question.QUERY_GETQUESTIONBYID).setParameter(1, questionID).getSingleResult();
+		    	
+				questionText = (QuestionText)em.createNamedQuery(QuestionText.QUERY_GETTEXT).setParameter(1, question).setParameter(2, language).getSingleResult();
+				
+				if(questionText!=null){
+					questionText.setQuestionText(text);
+				}
+				else{
+					questionText = new QuestionText();
+					
+					questionText.setQuestion(question);
+					questionText.setQuestionText(text);
+					questionText.setLanguage(language);
+				}
+				
+		    	
+		    	
+		    	 em.getTransaction().begin();
+		    	    if (!em.contains(questionText)) {
+		    	        // persist object - add to entity manager
+		    	        em.persist(questionText);
+		    	        // flush em - save to DB
+		    	        em.flush();
+		    	    }
+		    	    // commit transaction at all
+		    	    em.getTransaction().commit();
+		    	    
+		    	return questionText;
+
 		} finally {
 			em.close();
 		}

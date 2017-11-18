@@ -56,9 +56,11 @@ public class GdprServiceFactory extends ODataJPAServiceFactory {
 			oDataJPAContext.setEntityManagerFactory(emf);
 			oDataJPAContext.setPersistenceUnitName(PERSISTENCE_UNIT_NAME);
 			GdprProcessingExtension ext = new GdprProcessingExtension();
+			
 			ext.setLocale(locale);
 			oDataJPAContext.setJPAEdmExtension(ext);
 			oDataJPAContext.setJPAEdmMappingModel("GdprEdmMapping.xml");
+			
 			//emf.getProperties().put("locale", locale);
 			return oDataJPAContext;
 		} catch (Exception e) {

@@ -6,6 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,16 +23,31 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.eclipse.persistence.annotations.Cache;
+import org.eclipse.persistence.config.CacheIsolationType;
+
+//declare
 @Entity
 @Table(name = "GDPR_ANSWER" )
 @NamedQueries({
 	@NamedQuery(name = "Answer.getAllAnswers", query = "SELECT c FROM Answer c"),
-	@NamedQuery(name = "Answer.getAnswersForQuestion", query = "SELECT c FROM Answer c where c.fk_question.questionId = ?1")
+	@NamedQuery(name = "Answer.getAnswersForQuestion", query = "SELECT c FROM Answer c where c.fk_question.questionId = ?1"),
+	@NamedQuery(name = "Answer.getAnswerById", query = "SELECT c FROM Answer c where c.answerId = ?1")
 })
+@Cache(isolation=CacheIsolationType.ISOLATED)
 public class Answer {
+
+	public int getSortIndex() {
+		return sortIndex;
+	}
+
+	public void setSortIndex(int sortIndex) {
+		this.sortIndex = sortIndex;
+	}
 
 	public static final String QUERY_GETALLANSWERS = "Answer.getAllAnswers";
 	public static final String QUERY_GETANSWERSFORQUESTION = "Answer.getAnswersForQuestion";
+	public static final String QUERY_GETANSWERBYID = "Answer.getAnswerById";
 	
 	public static final String TYPE_SUGGESTEDVALUE = "SV";
 	public static final String TYPE_FREETEXT = "FT";
@@ -58,11 +74,14 @@ public class Answer {
 	@Column(name = "TYPE")
 	private String type;
 	
+	@Column(name = "SORTINDEX")
+	private int sortIndex;
+	
 	@ManyToOne(optional=false)
 	@JoinColumn(name="QUESTION_ID", referencedColumnName="QUESTION_ID")
 	private Question fk_question;
 	
-	@OneToMany(mappedBy = "fk_answer", targetEntity = Response.class, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "fk_answer", targetEntity = Response.class, fetch = FetchType.EAGER, cascade=CascadeType.ALL)
 	private List<Response> responses;
 	
 	@OneToMany(mappedBy = "answer", targetEntity = AnswerText.class, fetch = FetchType.EAGER)

@@ -119,6 +119,8 @@
 				<JPAAttributes>			
 					<JPAAttribute name="responseid">responseid</JPAAttribute>
 					<JPAAttribute name="text">text</JPAAttribute>
+					<JPAAttribute name="fk_answer">fk_answer</JPAAttribute>
+					<JPAAttribute name="fk_record">fk_record</JPAAttribute>
 				</JPAAttributes>
 				<JPARelationships>
 				
